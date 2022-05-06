@@ -51,7 +51,7 @@ const assesmentControllers={
       },
       getMentorAssesments: async (req, res) => {
         try {
-          console.log(req.user);
+          // console.log(req.user);
           const assesments =await Assesment.find({ mentor: req.user.id });
           console.log(assesments.length);
     

@@ -9,7 +9,7 @@ const auth = require("../middleware/userAuth");
 router.post("/create",mentor, assesmentController.createAssesment);
 router.post("/submission",student, assesmentController.submission);
 router.get("/getAssesments", assesmentController.getAssesments);
-router.get("/my-assesments",auth, assesmentController.getMentorAssesments);
+router.get("/my-assesments",mentor, assesmentController.getMentorAssesments);
 
 
 

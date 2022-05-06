@@ -11,6 +11,7 @@ const userAuth = (req, res, next) => {
             if (err) {
                 return res.status(400).json({ message: "Invalid Authentication" })
             }
+            console.log(user);
             req.user = user;
             next();
         })
