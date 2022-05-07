@@ -106,6 +106,20 @@ const assesmentControllers = {
       return res.status(500).json({ msg: error.message });
     }
   },
+
+  deleteAssesment: async (req, res) => {
+    try {
+      const assesment = await Assesment.findById(req.params.id);
+      if (!assesment) {
+        return res.status(400).json({ msg: "Assesment Not Found." });
+      }
+     
+      await Assesment.findByIdAndDelete(req.params.id);
+      res.json({ msg: "Assesment Deleted." });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  },
 };
 
 module.exports = assesmentControllers;
