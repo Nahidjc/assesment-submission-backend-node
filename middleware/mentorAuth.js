@@ -20,7 +20,7 @@ const authMentor = async (req, res, next) => {
       return res.status(400).json({ msg: "Mentor Recources Access Denied." });
     }
   
-    req.mentor = mentor
+    // req.mentor = mentor
     next();
     
     });
