@@ -13,9 +13,9 @@ router.put("/update-user/:id",admin,userController.updateUser);
 
 router.post("/create-assesment",admin, assesmentController.createAssesment);
 router.put("/update-assesment/:id",admin, assesmentController.updateAssesment);
-router.put("/grade-assesment/:id",admin, assesmentController.gradeAssesment);
-
 router.delete("/delete-assesment/:id",admin,assesmentController.deleteAssesment)
 
+router.put("/grade-submission/:id",admin, assesmentController.gradeAssesment);
+router.delete("/delete-submission/:id",admin, assesmentController.deleteSubmission);
 
 module.exports = router;

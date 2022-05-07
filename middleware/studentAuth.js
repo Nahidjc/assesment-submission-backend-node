@@ -5,6 +5,7 @@ const authStudent = async (req, res, next) => {
     const user = await User.findOne({
       _id: req.body.student,
     });
+    console.log(user);
     if (user.role === "mentor" || user.role === "admin") {
       return res.status(400).json({ msg: "Student Recources Access Denied." });
     }

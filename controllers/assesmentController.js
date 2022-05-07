@@ -129,6 +129,20 @@ const assesmentControllers = {
     }
   },
 
+  deleteSubmission: async (req, res) => {
+    try {
+      const submission = await AssesmentSubmission.findById(req.params.id);
+      console.log(submission);
+     if (!submission) {
+        return res.status(400).json({ msg: "Assesment Not Found." });
+      }
+     
+      await AssesmentSubmission.findByIdAndDelete(req.params.id);
+      res.json({ msg: "Submission Deleted." });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  },
   deleteAssesment: async (req, res) => {
     try {
       const assesment = await Assesment.findById(req.params.id);
