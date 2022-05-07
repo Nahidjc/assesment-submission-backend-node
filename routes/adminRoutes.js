@@ -6,7 +6,9 @@ const userController = require("../controllers/userController");
 
 
 router.post("/add-user",admin, userController.register);
-router.delete("/delete-user/:id",admin,userController.deleteUser)
+router.delete("/delete-user/:id",admin,userController.deleteUser);
+router.put("/update-user/:id",admin,userController.updateUser);
+
 router.post("/create-assesment",admin, assesmentController.createAssesment);
 
 
