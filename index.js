@@ -38,6 +38,7 @@ mongoose
 
 app.use("/user", require("./routes/userRoutes"));
 app.use("/assesment", require("./routes/assesmentRoutes"));
+app.use("/admin", require("./routes/adminRoutes"));
 
 
 app.listen(PORT, () => {

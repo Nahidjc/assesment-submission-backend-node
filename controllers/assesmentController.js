@@ -1,16 +1,14 @@
 const express = require("express");
-const bcrypt = require('bcrypt');
-const User = require("../models/userModels")
-const Assesment = require("../models/assesmentModel")
-const AssesmentSubmission = require("../models/submissionAssesmentModel")
+const bcrypt = require("bcrypt");
+const User = require("../models/userModels");
+const Assesment = require("../models/assesmentModel");
+const AssesmentSubmission = require("../models/submissionAssesmentModel");
 const jwt = require("jsonwebtoken");
-
 
 const assesmentControllers = {
   createAssesment: async (req, res) => {
     try {
-      const { title, description, mentor, deadline_at } =
-        req.body;
+      const { title, description, mentor, deadline_at } = req.body;
       if (!title || !description || !mentor || !deadline_at) {
         return res.status(400).json({ msg: "Invalid Assesment Credentials." });
       }
@@ -20,8 +18,7 @@ const assesmentControllers = {
         mentor: instructor._id,
         title,
         description,
-        deadline_at
-
+        deadline_at,
       });
 
       console.log(title, description, mentor, deadline_at);
@@ -33,7 +30,6 @@ const assesmentControllers = {
       return res.status(500).json({ msg: error.message });
     }
   },
-
 
   getAssesments: async (req, res) => {
     try {
@@ -65,11 +61,9 @@ const assesmentControllers = {
     }
   },
 
-
   submission: async (req, res) => {
     try {
-      const { link, student, assesment } =
-        req.body;
+      const { link, student, assesment } = req.body;
       if (!link || !student || !assesment) {
         return res.status(400).json({ msg: "Invalid Assesment Credentials." });
       }
@@ -77,46 +71,41 @@ const assesmentControllers = {
       const newAssesmentSubmission = new AssesmentSubmission({
         link,
         student,
-        assesment
+        assesment,
       });
 
       await newAssesmentSubmission.save();
       res.json({ msg: "Assesment Submitted Successfully." });
     } catch (error) {
-
       return res.status(500).json({ msg: error.message });
     }
   },
 
   gradeAssesment: async (req, res) => {
     try {
-      const { grade } =
-        req.body;
+      const { grade } = req.body;
       if (!grade) {
         return res.status(400).json({ msg: "Invalid Assesment Credentials." });
       }
       const submitAssesment = await AssesmentSubmission.findById(req.params.id);
       const assesment = await Assesment.findById(submitAssesment.assesment);
-      if(assesment.mentor.toString() !==req.user.id){
+      const admin = await User.findOne({
+        _id: req.user.id,
+      });
+      console.log(admin);
+      if (assesment.mentor.toString() !== req.user.id && admin.role !=="admin") {
         return res.status(400).json({ msg: "Not Authorized." });
       }
       await AssesmentSubmission.findOneAndUpdate(
         { _id: req.params.id },
         { grade }
       );
-      
-     
       res.json({ msg: "Submission grade Successfully." });
+   
     } catch (error) {
-
       return res.status(500).json({ msg: error.message });
     }
   },
-
-}
-
-
-
-
+};
 
 module.exports = assesmentControllers;
