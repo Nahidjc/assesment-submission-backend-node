@@ -1,5 +1,4 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
 const User = require("../models/userModels");
 const Assesment = require("../models/assesmentModel");
 const AssesmentSubmission = require("../models/submissionAssesmentModel");
@@ -13,15 +12,13 @@ const assesmentControllers = {
         return res.status(400).json({ msg: "Invalid Assesment Credentials." });
       }
       const instructor = await User.findOne({ _id: mentor });
-      console.log(instructor);
+    
       const newAssesment = new Assesment({
         mentor: instructor._id,
         title,
         description,
         deadline_at,
       });
-
-      console.log(title, description, mentor, deadline_at);
 
       await newAssesment.save();
       res.json({ msg: "Created a Assesment." });
@@ -55,8 +52,12 @@ const assesmentControllers = {
 
   getAssesments: async (req, res) => {
     try {
-      const assesments = await Assesment.find();
-      console.log(assesments.length);
+      const assesments = await Assesment.find().select({
+        mentor: 0,
+        created_at: 0,
+        createdAt:0,
+        updatedAt:0
+      });
 
       res.json({
         status: "success",
@@ -114,7 +115,6 @@ const assesmentControllers = {
       const admin = await User.findOne({
         _id: req.user.id,
       });
-      console.log(admin);
       if (assesment.mentor.toString() !== req.user.id && admin.role !=="admin") {
         return res.status(400).json({ msg: "Not Authorized." });
       }
@@ -132,7 +132,7 @@ const assesmentControllers = {
   deleteSubmission: async (req, res) => {
     try {
       const submission = await AssesmentSubmission.findById(req.params.id);
-      console.log(submission);
+     
      if (!submission) {
         return res.status(400).json({ msg: "Assesment Not Found." });
       }
@@ -156,7 +156,35 @@ const assesmentControllers = {
       return res.status(500).json({ msg: error.message });
     }
   },
+  getAssesmentOfSubmission:async(req,res)=>{
+    try{
+      const userRole = await User.findById(req.user.id);
+      if(userRole.role==="admin" || userRole.role==="mentor"){
+        const assesmentSubmission = await AssesmentSubmission.find({
+          assesment: req.params.id}).select({          
+            createdAt:0,
+            updatedAt:0
+          });
+     
+          res.json({ msg: "success" ,result:assesmentSubmission});
+      }else{
+      const assesmentSubmission = await AssesmentSubmission.find({
+          assesment: req.params.id,student:userRole._id}).select({        
+            createdAt:0,
+            updatedAt:0
+          });
+        
 
+          res.json({ msg: "success" ,result:assesmentSubmission});
+      }
+    
+     
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+    
+    
+  }
 
 };
 
