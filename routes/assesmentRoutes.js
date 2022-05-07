@@ -2,7 +2,7 @@ const assesmentController = require("../controllers/assesmentController");
 const router = require("express").Router();
 const mentor = require("../middleware/mentorAuth");
 const student = require("../middleware/studentAuth");
-const auth = require("../middleware/userAuth");
+
 
 
 

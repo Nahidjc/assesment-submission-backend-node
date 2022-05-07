@@ -78,6 +78,21 @@ login: async(req, res) => {
     }
 },
 
+deleteUser: async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id);
+      if (!user) {
+        return res.status(400).json({ msg: "User Not Found." });
+      }
+     
+      await User.findByIdAndDelete(req.params.id);
+      res.json({ msg: "User Deleted." });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  },
+
+
 refreshToken : (req, res) => {
     const rf_token = req.cookies.refreshToken;
     if (!rf_token) {
